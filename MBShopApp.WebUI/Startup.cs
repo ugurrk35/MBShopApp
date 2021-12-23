@@ -1,3 +1,8 @@
+using MBShopApp.Business.Abstract;
+using MBShopApp.Business.Concrete;
+using MBShopApp.DataAccess.Abstract;
+using MBShopApp.DataAccess.Concrete.EfCore;
+using MBShopApp.DataAccess.Concrete.Memory;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +27,12 @@ namespace MBShopApp.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddScoped<IProductDal, MemoryProductDal>();
+
+            services.AddScoped<IProductDal, EfCoreProductDal>();
+            services.AddScoped<IProductService, ProductManager>();
+
+            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
             services.AddRazorPages();
         }
 
@@ -31,6 +42,7 @@ namespace MBShopApp.WebUI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                SeedDatabase.Seed();
             }
             else
             {
@@ -45,7 +57,9 @@ namespace MBShopApp.WebUI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

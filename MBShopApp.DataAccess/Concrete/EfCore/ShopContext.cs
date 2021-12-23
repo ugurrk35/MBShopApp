@@ -13,7 +13,12 @@ namespace MBShopApp.DataAccess.Concrete.EfCore
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"server=DESKTOP-8I58UG8\\SQLEXPRESS; database = meduzababy; integrated security = true");
+            optionsBuilder.UseSqlServer(@"server=DESKTOP-8I58UG8\SQLEXPRESS; database = meduzababy; integrated security = true");
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           modelBuilder.Entity<ProductCategory>()
+                .HasKey(c => new { c.CategoryId, c.ProductId });
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }

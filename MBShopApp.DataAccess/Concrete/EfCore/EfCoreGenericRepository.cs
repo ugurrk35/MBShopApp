@@ -31,11 +31,11 @@ namespace MBShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter=null)
+        public List<T> GetAll(Expression<Func<T, bool>> filter=null)
         {
             using (var context = new TContext())
             {
-                return filter == null ? context.Set<T>()
+                return filter == null ? context.Set<T>().ToList()
                     : context.Set<T>().Where(filter).ToList();
                
             }
